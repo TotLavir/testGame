@@ -18,4 +18,8 @@ public abstract class GameObject {
         object.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
         object.draw(batch);
     }
+
+    public Rectangle getBounds() {
+        return bounds;
+    }
 }

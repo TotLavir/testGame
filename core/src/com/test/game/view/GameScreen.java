@@ -2,57 +2,57 @@ package com.test.game.view;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.test.game.Background;
-import com.test.game.Player;
+import com.test.game.model.Background;
+import com.test.game.model.Player;
 
 public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private SpriteBatch batch;
-    private Background bg;
+    private Background background;
+    private Texture textureBackground;
     private Player player;
+    private Texture texturePlayer;
 
-    public static float deltaCff;
+    private ShapeRenderer debug = new ShapeRenderer();
 
     @Override
     public void show() {
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 640, 1024);
-
         batch = new SpriteBatch();
-        bg = new Background();
-        player = new Player(new Vector2(camera.viewportWidth/2, 0));
+        textureBackground = new Texture("background.png");
+        texturePlayer = new Texture("brush.png");
+        background = new Background(textureBackground, -1f, -1f, 13f, 19f);
+        player = new Player(texturePlayer, (background.getBounds().getWidth()-2) / 2, 0, 1f, 2f);
     }
 
     @Override
     public void render(float delta) {
-        System.out.println("delta: " + delta);
         update();
         ScreenUtils.clear(0, 0, 0, 1);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        bg.render(batch);
-        player.render(batch);
+        background.draw(batch);
+        player.draw(batch);
         batch.end();
+        drawDebug();
     }
 
     private void update() {
-        if (player.getPos().y > camera.viewportHeight/2) {
-            camera.position.set(camera.viewportWidth/2, player.getPos().y, 0);
+        if(player.getBounds().getY() > background.getBounds().getHeight() / 2) {
+            camera.position.set((background.getBounds().getWidth()-2) / 2, player.getBounds().getY(), 0);
+            camera.update();
         }
-
-        bg.setCurrentPlayerPosition(player.getPos());
-
-        bg.update();
-        player.update();
-        camera.update();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        float aspectRatio = (float) height/width;
+        camera.setToOrtho(false, 11f, 17f * aspectRatio);
     }
 
     @Override
@@ -73,5 +73,19 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    private void drawDebug() {
+        debug.setProjectionMatrix(camera.combined);
+        debug.begin(ShapeType.Line);
+        debug.setColor(1f,0,0,0);
+        for (float i = background.getBounds().getY(); i < background.getBounds().getHeight(); i++) {
+            debug.rect(background.getBounds().getX(), i, background.getBounds().getWidth(), i);
+        }
+        debug.rect(background.getBounds().getX(), background.getBounds().getY(),
+                background.getBounds().getWidth(), background.getBounds().getHeight());
+        debug.rect(player.getBounds().getX(), player.getBounds().getY(),
+                    player.getBounds().getWidth(), player.getBounds().getHeight());
+        debug.end();
     }
 }
