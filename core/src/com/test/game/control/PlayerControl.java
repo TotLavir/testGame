@@ -10,7 +10,7 @@ public class PlayerControl {
 
     }
 
-    private final Rectangle playerBounds;
+    private Rectangle playerBounds;
     private float vy;
     private float speed;
     private final float gravity;
@@ -31,6 +31,7 @@ public class PlayerControl {
             state = State.JUMP;
         }
 
+        vy -= gravity * Gdx.graphics.getDeltaTime();
         switch (state) {
             case IDLE:
                 vy = 0;
@@ -47,9 +48,7 @@ public class PlayerControl {
             default:
                 break;
         }
-        vy -= gravity * Gdx.graphics.getDeltaTime();
-        playerBounds.y += vy * Gdx.graphics.getDeltaTime();
 
-        System.out.println(vy);
+        playerBounds.y += vy * Gdx.graphics.getDeltaTime();
     }
 }

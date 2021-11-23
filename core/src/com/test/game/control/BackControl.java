@@ -1,22 +1,18 @@
 package com.test.game.control;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.test.game.view.GameScreen;
 
 public class BackControl {
     private Rectangle backgroundBounds;
-    private Rectangle playerBounds;
 
-    public BackControl(Rectangle backgroundBounds, Rectangle playerBounds) {
+    public BackControl(Rectangle backgroundBounds) {
         this.backgroundBounds = backgroundBounds;
-        this.playerBounds = playerBounds;
     }
 
     public void handle() {
-        System.out.println(playerBounds.getY());
-        if (playerBounds.getY() >= (backgroundBounds.getHeight() + backgroundBounds.getHeight() / 2)) {
-            backgroundBounds = new Rectangle(backgroundBounds.getX(),
-                    backgroundBounds.getY() + backgroundBounds.getHeight() * 2, backgroundBounds.getWidth(),
-                    backgroundBounds.getHeight());
+        if (GameScreen.player.getBounds().getY() >= (backgroundBounds.getY() + (backgroundBounds.getHeight() + backgroundBounds.getHeight() / 2))) {
+            backgroundBounds.y += backgroundBounds.getHeight() * 2;
         }
     }
 }
