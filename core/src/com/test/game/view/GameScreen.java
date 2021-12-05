@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.test.game.control.BackControl;
 import com.test.game.model.Background;
+import com.test.game.model.Platform;
 import com.test.game.model.Player;
 
 public class GameScreen implements Screen {
@@ -18,6 +19,12 @@ public class GameScreen implements Screen {
     private Texture textureBackground;
     public static Player player;
     private Texture texturePlayer;
+    private Texture textureYellowPlatform;
+    public static Platform yellowPlatform;
+    private Texture textureBluePlatform;
+    public static Platform bluePlatform;
+    private Texture textureRedPlatform;
+    public static Platform redPlatform;
 
     private ShapeRenderer debug = new ShapeRenderer();
 
@@ -26,10 +33,16 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         textureBackground = new Texture("background.png");
+        textureYellowPlatform = new Texture( "platform_yellow.png");
+        textureBluePlatform = new Texture("platform_blue.png");
+        textureRedPlatform = new Texture("platform_red.png");
         texturePlayer = new Texture("brush.png");
         background[0] = new Background(textureBackground, -1f, -1f, 13f, 19f);
         background[1] = new Background(textureBackground, -1f, -1f + background[0].getBounds().getHeight(),
                 13f, 19f);
+        yellowPlatform = new Platform(textureYellowPlatform, 5f, 5f, 3f, 1.5f);
+        bluePlatform = new Platform(textureBluePlatform, -10f, 6.5f, 3f, 1.5f);
+        redPlatform = new Platform(textureRedPlatform, -10f, 8f, 3f, 1.5f);
         player = new Player(texturePlayer, (background[0].getBounds().getWidth()-2) / 2, 0, 1f, 2f);
     }
 
@@ -41,6 +54,9 @@ public class GameScreen implements Screen {
         batch.begin();
         background[0].draw(batch);
         background[1].draw(batch);
+        yellowPlatform.draw(batch);
+        bluePlatform.draw(batch);
+        redPlatform.draw(batch);
         player.draw(batch);
         batch.end();
         //drawDebug();

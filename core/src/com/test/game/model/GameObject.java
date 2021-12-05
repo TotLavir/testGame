@@ -22,4 +22,5 @@ public abstract class GameObject {
     public Rectangle getBounds() {
         return bounds;
     }
+
 }

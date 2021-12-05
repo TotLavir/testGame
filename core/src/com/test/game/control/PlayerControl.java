@@ -3,6 +3,8 @@ package com.test.game.control;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.test.game.view.GameScreen;
 
 public class PlayerControl {
     private enum State {
@@ -11,6 +13,7 @@ public class PlayerControl {
     }
 
     private Rectangle playerBounds;
+    private Vector2 position;
     private float vy;
     private float speed;
     private final float gravity;
@@ -19,6 +22,7 @@ public class PlayerControl {
 
     public PlayerControl(Rectangle playerBounds) {
         this.playerBounds = playerBounds;
+        position = new Vector2((playerBounds.getX() + playerBounds.getWidth()) / 2, playerBounds.y);
         state = State.IDLE;
         jumpHeight = 5f;
         gravity = 9f;
@@ -29,6 +33,9 @@ public class PlayerControl {
     public void handle() {
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) && state != State.JUMP) {
             state = State.JUMP;
+        }
+        if (state == State.CRUSH && GameScreen.yellowPlatform.onPlatform(playerBounds.getPosition(position)) || GameScreen.bluePlatform.onPlatform(playerBounds.getPosition(position)) || GameScreen.redPlatform.onPlatform(playerBounds.getPosition(position))) {
+            state = State.IDLE;
         }
 
         vy -= gravity * Gdx.graphics.getDeltaTime();
